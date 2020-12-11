@@ -1,12 +1,12 @@
 package com.chacon.apioptimization.algorithms.backPackProblem;
 
+import com.chacon.apioptimization.dataTransferObject.BackPackDTO;
+
 public class BackPackProblem {
     
-    public String getHeuristic(){
-        String a = this.solution()+" developing backpack problem ";
-        return a;
+    public String getHeuristic(BackPackDTO backPackDTO){
+    
+        return "developing backpack problem";
     }
-    private long solution(){
-        return (20*100);
-    }
+
 }
