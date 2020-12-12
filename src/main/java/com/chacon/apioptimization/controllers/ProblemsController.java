@@ -2,7 +2,8 @@ package com.chacon.apioptimization.controllers;
 
 import com.chacon.apioptimization.algorithms.backPackProblem.BackPackProblem;
 import com.chacon.apioptimization.algorithms.travelingCashmere.TravelingCashmere;
-import com.chacon.apioptimization.dataTransferObject.BackPackDTO;
+import com.chacon.apioptimization.dataTransferObject.backPack.request.DataBackPackRequest;
+import com.chacon.apioptimization.dataTransferObject.backPack.response.DataBackPackResponse;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,9 +15,9 @@ public class ProblemsController {
     
     BackPackProblem backPackProblem = new BackPackProblem();
 
-    @PostMapping(value = "back-pack")
-    public String getSolutionBackPack(@RequestBody BackPackDTO backPackDTO){
-        return this.backPackProblem.getHeuristic(backPackDTO);
+    @PostMapping(value = "back-pack")                          
+    public DataBackPackResponse getSolutionBackPack(@RequestBody DataBackPackRequest dataBackPackRequest){
+        return this.backPackProblem.getHeuristic(dataBackPackRequest);
     }
 
     TravelingCashmere travelingCashmere = new TravelingCashmere();
