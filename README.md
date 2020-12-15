@@ -55,19 +55,24 @@ endpoint used receives an application in json with the data from the knapsack pr
             "objectFuncion": 11.0,
             "objects": [
                 {
+                    "name": "3",
+                    "weight": 7.0,
+                    "benefit": 3.0
+                },
+                {
                     "name": "2",
                     "weight": 5.0,
                     "benefit": 2.0
                 },
                 {
-                    "name": "5",
-                    "weight": 6.0,
-                    "benefit": 4.0
-                },
-                {
                     "name": "4",
                     "weight": 9.0,
                     "benefit": 4.0
+                },
+                {
+                    "name": "1",
+                    "weight": 4.0,
+                    "benefit": 2.0
                 }
             ],
             "capacity": 22.0
