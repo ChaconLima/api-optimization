@@ -15,7 +15,7 @@ public class ProblemsController {
     
     BackPackProblem backPackProblem = new BackPackProblem();
 
-    @PostMapping(value = "back-pack")                          
+    @PostMapping(value = "knapsack")                          
     public DataBackPackResponse getSolutionBackPack(@RequestBody DataBackPackRequest dataBackPackRequest){
         return this.backPackProblem.getOptimizationBackPack(dataBackPackRequest);
     }

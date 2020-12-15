@@ -144,8 +144,8 @@ public class BackPackProblem {
         dataBackPakResponse_current = this.greedyHeuristic(dataBackPackRequest);
         dataBackPakResponse = dataBackPakResponse_current;
 
-        int IterT=0, SAmax=100;
-        double T = 100, delta=0, accept = 0.85, e=2.718281828459045235360287, alfha = 0.5;
+        int IterT=0, SAmax=1000;
+        double T = 1000, delta=0, accept = 0.85, e=2.718281828459045235360287, alfha = 0.5;
         while(T>0)
         {
             while(IterT<SAmax)
