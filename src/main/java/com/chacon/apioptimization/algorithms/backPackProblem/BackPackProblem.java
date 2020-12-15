@@ -48,7 +48,7 @@ public class BackPackProblem {
     private DataBackPackResponse greedyHeuristic(DataBackPackRequest dataBackPackRequest){
         DataBackPackResponse dataBackPackResponse = new DataBackPackResponse();
 
-        List<ObjectDefault>objects =new ArrayList<ObjectDefault>();
+        List<ObjectDefault>objects = new ArrayList<ObjectDefault>();
         List<ObjectDefault>answers = new ArrayList<ObjectDefault>();
 
         objects= dataBackPackRequest.getObjects();
@@ -58,16 +58,33 @@ public class BackPackProblem {
         Boolean insert = true;
         double capacity = 0;
         while( insert == true){
+
             int index = generator.nextInt(objects.size());
-            capacity+=objects.get(index).getWeight();
-            answers.add(objects.get(index));
-            if(capacity>dataBackPackRequest.getMaximumCapacity()){
-                capacity-=objects.get(index).getWeight();
-                answers.remove(objects.get(index));
-                insert=false;
+            Boolean accept=true;
+
+            for(int i=0; i<answers.size();i++){
+
+                if(objects.get(index) == answers.get(i)){
+                    accept=false;
+                }
+            }
+            if( accept==true){
+
+                capacity+=objects.get(index).getWeight();
+                answers.add(objects.get(index));
+                
+                if(capacity>dataBackPackRequest.getMaximumCapacity()){
+
+                    capacity-=objects.get(index).getWeight();
+                    answers.remove(objects.get(index));
+                    insert=false;
+                }
             }
         }
         dataBackPackResponse.setObjects(answers);
+        dataBackPackResponse = this.calculateFuncionObjetive(dataBackPackResponse);
+        dataBackPackResponse.setCapacity(this.calculateTotalWeight(dataBackPackResponse));
+
         return dataBackPackResponse;
     }
     //===================================
@@ -76,6 +93,7 @@ public class BackPackProblem {
     private DataBackPackResponse swapOpt(DataBackPackResponse dataBackPackResponse,
                                          DataBackPackRequest dataBackPackRequest){
         
+        DataBackPackResponse dataResponse = new DataBackPackResponse();
         List<ObjectDefault>objectsRequest = new ArrayList<ObjectDefault>();
         List<ObjectDefault>objectsRespose = new ArrayList<ObjectDefault>();
 
@@ -83,29 +101,74 @@ public class BackPackProblem {
         objectsRespose=dataBackPackResponse.getObjects();
 
         Random generator = new Random();
-        int output_index=generator.nextInt(objectsRespose.size()), 
-            input_index=generator.nextInt(objectsRequest.size());
+        int output_index=0, input_index=0;
+
+        output_index=generator.nextInt(objectsRespose.size());
         
+        Boolean insert = true; 
+        while( insert == true)
+        {
+            input_index=generator.nextInt(objectsRequest.size());
+            insert=false;
+            for(int i=0; i<objectsRespose.size();i++){
+                if( objectsRespose.get(i) == objectsRequest.get(input_index)){
+                    insert = true;
+                }
+            }
+        }
+
         objectsRespose.remove(output_index);
         objectsRespose.add(objectsRequest.get(input_index));
 
-        dataBackPackResponse.setObjects(objectsRespose);
+        dataResponse.setObjects(objectsRespose);
 
-        if(this.calculateTotalWeight(dataBackPackResponse)>dataBackPackRequest.getMaximumCapacity()){
-            dataBackPackResponse.setObjectFuncion(100000);
+        if(this.calculateTotalWeight(dataResponse)>dataBackPackRequest.getMaximumCapacity()){
+            dataResponse.setObjectFuncion(0);
         }
         else{
-            dataBackPackResponse = this.calculateFuncionObjetive(dataBackPackResponse);
+            dataResponse = this.calculateFuncionObjetive(dataResponse);
         }
-        
-        return dataBackPackResponse;
+        dataResponse.setCapacity(this.calculateTotalWeight(dataResponse));
+
+        return dataResponse;
     }
     //==================================
     //Simulated Annealing
     //==================================
     private DataBackPackResponse simulateAnnealing(DataBackPackRequest dataBackPackRequest){
-        DataBackPackResponse dataBackPakResponse = new DataBackPackResponse();
 
+        DataBackPackResponse dataBackPakResponse = new DataBackPackResponse();
+        DataBackPackResponse dataBackPakResponse_current = new DataBackPackResponse();
+        DataBackPackResponse dataBackPakResponse_line = new DataBackPackResponse();
+
+        dataBackPakResponse_current = this.greedyHeuristic(dataBackPackRequest);
+        dataBackPakResponse = dataBackPakResponse_current;
+
+        int IterT=0, SAmax=100;
+        double T = 100, delta=0, accept = 0.85, e=2.718281828459045235360287, alfha = 0.5;
+        while(T>0)
+        {
+            while(IterT<SAmax)
+            {
+                IterT=IterT+1;
+                dataBackPakResponse_line=this.swapOpt(dataBackPakResponse_current, dataBackPackRequest);
+                delta = dataBackPakResponse_line.getObjectFuncion() - dataBackPakResponse_current.getObjectFuncion();
+               
+                if(delta > 0){
+                    dataBackPakResponse_current = dataBackPakResponse_line;
+                    if(dataBackPakResponse.getObjectFuncion()<dataBackPakResponse_current.getObjectFuncion()){
+                        dataBackPakResponse = dataBackPakResponse_current;
+                    }
+                }
+                else{
+                    if(accept<Math.pow(e,(delta/T))){
+                        dataBackPakResponse_current = dataBackPakResponse_line;
+                    }
+                }
+            }
+            T = (1 - alfha)*T;
+            IterT = 0;
+        }
         return dataBackPakResponse;
     }
 
@@ -113,17 +176,6 @@ public class BackPackProblem {
     //main
     //===================================
     public DataBackPackResponse getOptimizationBackPack(DataBackPackRequest dataBackPackRequest){
-
-        DataBackPackResponse dataBackPakResponse = new DataBackPackResponse();
-        dataBackPakResponse = this.calculateFuncionObjetive( this.greedyHeuristic(dataBackPackRequest));
-        dataBackPakResponse.setCapacity(this.calculateTotalWeight(dataBackPakResponse));
-
-        dataBackPakResponse =  this.swapOpt(dataBackPakResponse, dataBackPackRequest);
-        dataBackPakResponse.setCapacity(this.calculateTotalWeight(dataBackPakResponse));
-
-        return dataBackPakResponse;
+        return this.simulateAnnealing(dataBackPackRequest);
     }
-
- 
-
 }
