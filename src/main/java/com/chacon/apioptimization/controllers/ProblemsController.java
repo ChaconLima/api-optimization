@@ -17,7 +17,7 @@ public class ProblemsController {
 
     @PostMapping(value = "back-pack")                          
     public DataBackPackResponse getSolutionBackPack(@RequestBody DataBackPackRequest dataBackPackRequest){
-        return this.backPackProblem.getHeuristic(dataBackPackRequest);
+        return this.backPackProblem.getOptimizationBackPack(dataBackPackRequest);
     }
 
     TravelingCashmere travelingCashmere = new TravelingCashmere();
