@@ -8,7 +8,7 @@ The knapsack problem is a problem in combinatorial optimization: Given a set of 
 
 In this problem, the SimulateAnneling algorithm was used in conjunction with the concept of 1Opt exchanges.
 
-endpoint used receives an application in json with the data from the knapsack problem, and returns a document in json, with optimized result of the problem.
+The endpoint used receives an application in json with the data from the knapsack problem, and returns a document in json, with optimized result of the problem.
 
 - Usage Endpoint:
 
