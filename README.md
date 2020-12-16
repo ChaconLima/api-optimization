@@ -52,10 +52,13 @@ endpoint used receives an application in json with the data from the knapsack pr
     Example of return in json, created by api
 
         {
-            "objectFuncion": x,
+            "objectFuncion": double,
             "objects": [
-               
-            "capacity": x
+                 "name":"string",
+                 "weight":double,
+                 "benefit":double
+            ],   
+            "capacity": double
         }
 
 ## Next Endpoits
